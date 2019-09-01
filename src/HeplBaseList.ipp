@@ -81,25 +81,29 @@ template<class T>
 HeplBaseList<T>& HeplBaseList<T>::operator=(HeplBaseList const& baseList) {
 
     erase();
+
     if (baseList.m_pHead == nullptr) {
         return *this;
     }
 
-    HeplCell<T> *newHeplCell = new HeplCell<T>();
-    HeplCell<T> *newHeplCellStart = newHeplCell;
-    HeplCell<T> *baseListHeplCell = baseList.m_pHead;
+    HeplCell<T> *baseListCell = baseList.m_pHead;
+    HeplCell<T> *newCell = new HeplCell<T>();
+    m_pHead = newCell;
 
-    while (baseListHeplCell != nullptr) {
-        newHeplCell->setValue(*(baseListHeplCell->getValue()));
-        if (baseListHeplCell->getNext() == nullptr) {
-            newHeplCell->setNext(baseListHeplCell->getNext());
+    while (baseListCell != nullptr) {
+
+        newCell->setValue(*(baseListCell->getValue()));
+
+        if (baseListCell->getNext() == nullptr) {
+            newCell->setNext(nullptr);
         } else {
-            newHeplCell->setNext(new HeplCell<T>());
+            newCell->setNext(new HeplCell<T>());
         }
-        newHeplCell = newHeplCell->getNext();
-        baseListHeplCell = baseListHeplCell->getNext();
+
+        newCell = newCell->getNext();
+        baseListCell = baseListCell->getNext();
     }
-    m_pHead = newHeplCellStart;
+
     return *this;
 }
 

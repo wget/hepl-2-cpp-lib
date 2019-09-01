@@ -274,6 +274,7 @@ istream& operator>>(istream& lhs, HeplString& rhs) {
 
     // The \0 end of string is copied to the constructor
     HeplString string(newArrayList);
+    delete[] newArrayList;
     rhs = string;
     return lhs;
 }
