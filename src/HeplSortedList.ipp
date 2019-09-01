@@ -1,22 +1,24 @@
 template<class T>
 T* HeplSortedList<T>::add(T const& val) {
 
-    T *newVal = new T(val);
     HeplCell<T> *newHeplCell = new HeplCell<T>();
-    newHeplCell->setValue(*newVal);
+    newHeplCell->setValue(val);
     newHeplCell->setNext(nullptr);
 
+    // If this is the very first item in the list (the list is currently empty)
     if (HeplBaseList<T>::m_pHead == nullptr) {
         HeplBaseList<T>::m_pHead = newHeplCell;
-        return newVal;
+        return newHeplCell->getValue();
     }
 
-    if (*newVal <= *(HeplBaseList<T>::m_pHead->getValue())) {
+    // If below than the first list item
+    if (val <= *(HeplBaseList<T>::m_pHead->getValue())) {
         newHeplCell->setNext(HeplBaseList<T>::m_pHead);
         HeplBaseList<T>::m_pHead = newHeplCell;
-        return newVal;
+        return newHeplCell->getValue();
     }
 
+    // Iterate if greater
     HeplCell<T> *listHeplCell = HeplBaseList<T>::m_pHead;
     HeplCell<T> *listHeplCellPrevious = HeplBaseList<T>::m_pHead;
     while (listHeplCell->getNext() != nullptr && val > *(listHeplCell->getValue())) {
@@ -26,11 +28,11 @@ T* HeplSortedList<T>::add(T const& val) {
 
     if (val > *(listHeplCell->getValue())) {
         listHeplCell->setNext(newHeplCell);
-        return newVal;
+        return newHeplCell->getValue();
     }
 
     listHeplCellPrevious->setNext(newHeplCell);
     newHeplCell->setNext(listHeplCell);
 
-    return newVal;
+    return newHeplCell->getValue();
 }

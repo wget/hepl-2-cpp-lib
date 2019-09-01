@@ -2,9 +2,8 @@
 template<class T>
 T* HeplList<T>::add(const T& val) {
 
-    T newVal = T(val);
     HeplCell<T> *newHeplCell = new HeplCell<T>();
-    newHeplCell->setValue(newVal);
+    newHeplCell->setValue(val);
     newHeplCell->setNext(nullptr);
 
     if (HeplBaseList<T>::m_pHead == nullptr) {
