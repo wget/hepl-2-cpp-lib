@@ -60,12 +60,13 @@ HeplString::HeplString(HeplString* other) {
     cout << "In copy constructor: HeplString::HeplString(HeplString const& other)" << endl;
 #endif
     m_size = other->m_size;
-    m_stringArray = new char[m_size];
+    m_stringArray = new char[m_size + 1];
     // We should have used memcpy here, but since it is contained in cstring,
     // we are prohibited to use it.
     for (size_t i = 0; i < other->m_size; i++) {
         m_stringArray[i] = other->m_stringArray[i];
     }
+    m_stringArray[m_size] = '\0';
 }
 
 char *HeplString::c_str() const {
@@ -95,11 +96,12 @@ HeplString& HeplString::operator=(const HeplString& rhs) {
         return *this;
     }
     delete[] m_stringArray;
-    m_stringArray = new char[rhs.m_size];
+    m_stringArray = new char[rhs.m_size + 1];
     for (size_t i = 0; i < rhs.m_size; i++) {
         m_stringArray[i] = rhs.m_stringArray[i];
     }
     m_size = rhs.m_size;
+    m_stringArray[m_size] = '\0';
 
     return *this;
 }
@@ -107,7 +109,7 @@ HeplString& HeplString::operator=(const HeplString& rhs) {
 HeplString& HeplString::operator+=(const HeplString& rhs) {
 
     char *oldStringArray = m_stringArray;
-    m_stringArray = new char[m_size + rhs.m_size];
+    m_stringArray = new char[m_size + rhs.m_size + 1];
     size_t i = 0;
     // Copy existing string to new memory space
     while (i < m_size) {
@@ -165,15 +167,15 @@ char& HeplString::operator[](size_t i) {
 }
 
 bool HeplString::operator==(HeplString const& rhs) const {
-    if (size() == rhs.size()) {
-        for (size_t i = 0; i < size(); i++) {
-            if (m_stringArray[i] != rhs.m_stringArray[i]) {
-                return false;
-            }
-        }
-        return true;
+    if (size() != rhs.size()) {
+        return false;
     }
-    return false;
+    for (size_t i = 0; i < size(); i++) {
+        if (m_stringArray[i] != rhs.m_stringArray[i]) {
+            return false;
+        }
+    }
+    return true;
 }
 
 bool HeplString::operator!=(HeplString const& rhs) const {
@@ -248,18 +250,21 @@ istream& operator>>(istream& lhs, HeplString& rhs) {
 
     // Count number of characters
     linkedChar = linkedCharStart;
-    size_t size = 0;
+    size_t i = 0;
     while (linkedChar != nullptr) {
         linkedChar = linkedChar->pNext;
-        size++;
+        i++;
     }
 
     linkedChar = linkedCharStart;
-    char *newArrayList = new char[size];
-    for (size_t i = 0; linkedChar != nullptr; i++) {
+    char *newArrayList = new char[i + 1];
+    i = 0;
+    while (linkedChar != nullptr) {
         newArrayList[i] = linkedChar->payload;
         linkedChar = linkedChar->pNext;
+        i++;
     }
+    newArrayList[i] = '\0';
 
     // Delete linked list
     linkedChar = linkedCharStart;
