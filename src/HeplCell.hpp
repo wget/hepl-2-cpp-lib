@@ -12,6 +12,7 @@ class HeplCell {
     public:
         HeplCell<T>();
         HeplCell<T>(T value, HeplCell<T> *pNext);
+        ~HeplCell();
         T* getValue();
         HeplCell<T>* getNext() const;
         void setValue(T newValue);
