@@ -8,6 +8,11 @@ HeplCell<T>::HeplCell(T value, HeplCell<T> *pNext)
     : m_value(value), m_pNext(pNext) {
 }
 
+template<class T>
+HeplCell<T>::~HeplCell() {
+    delete m_pNext;
+}
+
 // Needed to be a non const pointer for the add method in the list
 template<class T>
 T* HeplCell<T>::getValue() {
