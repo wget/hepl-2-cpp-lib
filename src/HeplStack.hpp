@@ -12,6 +12,7 @@ class HeplStack : public HeplBaseList<T> {
     public:
         // Default constructor and copy constructor are automatically
         // inherited.
+        ~HeplStack();
         T* add(const T& val);
         void push(const T& val);
         T top() const;
@@ -21,6 +22,12 @@ class HeplStack : public HeplBaseList<T> {
 class HeplStackEmptyException: HeplBaseException {
     using HeplBaseException::HeplBaseException;
 };
+
+
+template<class T>
+HeplStack<T>::~HeplStack() {
+    this->erase();
+}
 
 template<class T>
 T* HeplStack<T>::add(const T& val) {

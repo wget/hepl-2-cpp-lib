@@ -1,6 +1,7 @@
 #include "HeplString.hpp"
 #include "HeplStringOutOfRangeException.hpp"
 #include "HeplList.hpp"
+#include "HeplStack.hpp"
 
 using namespace std;
 
@@ -16,17 +17,16 @@ HeplString::HeplString(const char *newString) {
 #ifdef WITH_DEBUG
     cout << "In initialization constructor: HeplString::HeplString(const char *newString)" << endl;
 #endif
+    m_size = 0;
     if (!newString) {
-        m_size = 0;
         m_stringArray = new char[0];
         return;
     }
-    size_t i = 0;
-    while (newString[i] != '\0') {
-        i++;
+    while (newString[m_size] != '\0') {
+        m_size++;
     }
-    m_size = i;
     m_stringArray = new char[m_size + 1];
+    size_t i = 0;
     for (i = 0; i < m_size; i++) {
         m_stringArray[i] = newString[i];
     }
@@ -63,7 +63,7 @@ HeplString::HeplString(HeplString* other) {
     m_stringArray = new char[m_size + 1];
     // We should have used memcpy here, but since it is contained in cstring,
     // we are prohibited to use it.
-    for (size_t i = 0; i < other->m_size; i++) {
+    for (size_t i = 0; i < m_size; i++) {
         m_stringArray[i] = other->m_stringArray[i];
     }
     m_stringArray[m_size] = '\0';
@@ -78,7 +78,7 @@ size_t HeplString::size() const {
 }
 
 bool HeplString::empty() const {
-    return (m_size == 0)? true: false;
+    return (m_size == 0) ? true: false;
 }
     
 HeplString::~HeplString() {
@@ -230,57 +230,45 @@ ostream& operator<<(ostream& lhs, const HeplString& rhs) {
 }
 
 istream& operator>>(istream& lhs, HeplString& rhs) {
-    // Structures inside functions are new since c++11.
-    struct LinkedChar {
-        char payload;
-        LinkedChar *pNext;
-    };
-    LinkedChar *linkedChar = new LinkedChar();
-    LinkedChar *linkedCharStart = linkedChar;
+
     // istream is not like fstream, we cannot read back in the stream, reading
-    // is destructive, so using a linked list seems mandatory here.
+    // is destructive, so using a linked list seems mandatory here (or smarter,
+    // a stack :p)
+    HeplStack<char> stack;
     char charRead;
-    while (lhs.get(charRead) && charRead != '\n') {
-        linkedChar->payload = charRead;
-        linkedChar->pNext = new LinkedChar();
-        linkedChar = linkedChar->pNext;
-    }
-    linkedChar->payload = '\0';
-    linkedChar->pNext = nullptr;
+    char charReadPrevious;
+    while (lhs.get(charRead)) {
 
-    // Count number of characters
-    linkedChar = linkedCharStart;
-    size_t i = 0;
-    while (linkedChar != nullptr) {
-        linkedChar = linkedChar->pNext;
-        i++;
+        // We need to detect \r\n (DOS) and \n (UNIX)
+        if (charRead == '\n') {
+            if (charReadPrevious == '\r') {
+                stack.pop();
+            }
+            break;
+        }
+
+        stack.push(charRead);
+        charReadPrevious = charRead;
     }
 
-    linkedChar = linkedCharStart;
+    size_t i = stack.getNumberItems();
+
+    // We cannot detect based on the payload or the nullptr because of the CRLF
+    // detection from above
     char *newArrayList = new char[i + 1];
-    i = 0;
-    while (linkedChar != nullptr) {
-        newArrayList[i] = linkedChar->payload;
-        linkedChar = linkedChar->pNext;
-        i++;
+    for (size_t j = 0; j < i; j++) {
+        newArrayList[j] = stack.pop();
     }
     newArrayList[i] = '\0';
-
-    // Delete linked list
-    linkedChar = linkedCharStart;
-    linkedCharStart = nullptr;
-    LinkedChar *linkedCharCurrent = nullptr;
-    while (linkedChar != nullptr) {
-        linkedCharCurrent = linkedChar;
-        linkedChar = linkedChar->pNext;
-        delete linkedCharCurrent;
-    }
-    linkedChar = nullptr;
 
     // The \0 end of string is copied to the constructor
     HeplString string(newArrayList);
     delete[] newArrayList;
-    rhs = string;
+
+    // We reverse the string because of the usage of the stack we used before
+    // whose pop() processes values in LIFO.
+    rhs = string.reverse();
+
     return lhs;
 }
 
@@ -376,7 +364,7 @@ bool HeplString::isNumber() const {
     return true;
 }
 
-void HeplString::reverse() {
+HeplString& HeplString::reverse() {
     size_t halfSize = m_size / 2;
     char temp;
     for (size_t i = 0; i < halfSize; i++) {
@@ -384,6 +372,7 @@ void HeplString::reverse() {
         m_stringArray[i] = m_stringArray[m_size - 1 - i];
         m_stringArray[m_size - 1 - i] = temp;
     }
+    return *this;
 }
 
 void HeplString::clear() {
