@@ -77,7 +77,14 @@ HeplBaseList<T>::HeplBaseList(HeplBaseList& baseList)
 
 template<class T>
 void HeplBaseList<T>::erase() {
-    delete m_pHead;
+    HeplCell<T> *baseListHeplCell = m_pHead;
+    HeplCell<T> *baseListHeplCellCurrent = nullptr;
+    while (baseListHeplCell != nullptr) {
+        baseListHeplCellCurrent = baseListHeplCell;
+        baseListHeplCell = baseListHeplCell->getNext();
+        delete baseListHeplCellCurrent;
+    }
+    m_pHead = nullptr;
 }
 
 template<class T>

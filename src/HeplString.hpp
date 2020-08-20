@@ -14,10 +14,10 @@ class HeplList;
 class HeplString {
 
     private:
+        // For ease of use, we **are** storing a null string ending character.
         char *m_stringArray;
-        // The class does not have a zero end string character. Only char
-        // arrays passed as argument to this string constructor have it, but
-        // are not taken into account to make the string array internal.
+        // The size is returning the number of chars **without** taking into
+        // account the null string ending character.
         size_t m_size;
         void itoaStringArray(int n);
         void kmpBuildFailureFunction(HeplString pattern, int f[]);
@@ -39,7 +39,7 @@ class HeplString {
         int atoi() const;
         HeplString ftoa(float f, int afterpoint = 4);
         bool isNumber() const;
-        void reverse();
+        HeplString& reverse();
         void clear();
         HeplString substr(size_t pos = 0, size_t len = -1) const;
         HeplList<HeplString> explode(HeplString delimiter, int limit = 0);
