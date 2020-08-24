@@ -112,11 +112,9 @@ size_t HeplBaseList<T>::getNumberItems() const {
 template<class T>
 void HeplBaseList<T>::display() const {
     HeplCell<T> *baseListHeplCell = m_pHead;
-    size_t i = 0;
-    while (baseListHeplCell != nullptr) {
+    for (size_t i = 0; baseListHeplCell != nullptr; i++) {
         baseListHeplCell->display();
         baseListHeplCell = baseListHeplCell->getNext();
-        i++;
     }
 }
 
@@ -150,10 +148,8 @@ HeplBaseList<T>& HeplBaseList<T>::operator=(HeplBaseList const& baseList) {
 template<class T>
 T& HeplBaseList<T>::operator[](size_t itemNumber) {
     HeplCell<T> *baseListHeplCell = m_pHead;
-    size_t i = 0;
-    while (baseListHeplCell != nullptr && i != itemNumber) {
+    for (size_t i = 0; baseListHeplCell != nullptr && i != itemNumber; i++) {
         baseListHeplCell = baseListHeplCell->getNext();
-        i++;
     }
 
     if (baseListHeplCell == nullptr) {
