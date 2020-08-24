@@ -353,13 +353,11 @@ HeplString HeplString::ftoa(float f, int afterpoint) {
 }
 
 // src.: http://www.cplusplus.com/reference/cctype/isdigit/
+// src.: https://stackoverflow.com/a/16575025/3514658
 bool HeplString::isNumber() const {
-    for (unsigned int i = 0; i < m_size; i++) {
-        if (m_stringArray[i] < 48 || m_stringArray[i] > 57) {
-            return false;
-        }
-    }
-    return true;
+    char* p;
+    strtod(m_stringArray, &p);
+    return *p == 0;
 }
 
 HeplString& HeplString::reverse() {
