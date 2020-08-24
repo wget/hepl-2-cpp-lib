@@ -14,3 +14,8 @@ HeplBaseException::HeplBaseException(const char* msg)
 HeplString HeplBaseException::what() const {
     return msg;
 }
+
+std::ostream& operator<<(std::ostream& lhs, const HeplBaseException& rhs) {
+    lhs << rhs.what();
+    return lhs;
+}
