@@ -26,6 +26,7 @@ class HeplBaseList {
         bool isEmpty() const;
         size_t getNumberItems() const;
         virtual void display() const;
+        bool find(T const& val) const;
         // Pure virtual method
         virtual T* add(T const& val) = 0;
 
@@ -116,6 +117,21 @@ void HeplBaseList<T>::display() const {
         baseListHeplCell->display();
         baseListHeplCell = baseListHeplCell->getNext();
     }
+}
+
+template<class T>
+bool HeplBaseList<T>::find(T const& val) const {
+    HeplCell<T> *baseListHeplCell = m_pHead;
+    while (baseListHeplCell != nullptr) {
+        // Implies the == operator has been implemented in the class' object we
+        // want to compare.
+        if (val == *(baseListHeplCell->getValue())) {
+            return true;
+        }
+        baseListHeplCell = baseListHeplCell->getNext();
+    }
+
+    return false;
 }
 
 template<class T>
