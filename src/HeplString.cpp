@@ -3,19 +3,17 @@
 #include "HeplList.hpp"
 #include "HeplStack.hpp"
 
-using namespace std;
-
 HeplString::HeplString()
     : m_stringArray(nullptr),
     m_size(0) {
 #ifdef WITH_DEBUG
-    cout << "In initialization constructor: HeplString::HeplString()" << endl;
+    std::cout << "In initialization constructor: HeplString::HeplString()" << std::endl;
 #endif
 }
 
 HeplString::HeplString(const char *newString) {
 #ifdef WITH_DEBUG
-    cout << "In initialization constructor: HeplString::HeplString(const char *newString)" << endl;
+    std::cout << "In initialization constructor: HeplString::HeplString(const char *newString)" << std::endl;
 #endif
     m_size = 0;
     if (!newString) {
@@ -35,7 +33,7 @@ HeplString::HeplString(const char *newString) {
 
 HeplString::HeplString(int number) {
 #ifdef WITH_DEBUG
-    cout << "In initialization constructor: HeplString::HeplString(int number)" << endl;
+    std::cout << "In initialization constructor: HeplString::HeplString(int number)" << std::endl;
 #endif
     itoaStringArray(number);
     reverse();
@@ -43,7 +41,7 @@ HeplString::HeplString(int number) {
 
 HeplString::HeplString(const HeplString& other) {
 #ifdef WITH_DEBUG
-    cout << "In copy constructor: HeplString::HeplString(HeplString const& other)" << endl;
+    std::cout << "In copy constructor: HeplString::HeplString(HeplString const& other)" << std::endl;
 #endif
     m_size = other.m_size;
     m_stringArray = new char[m_size + 1];
@@ -57,7 +55,7 @@ HeplString::HeplString(const HeplString& other) {
 
 HeplString::HeplString(HeplString* other) {
 #ifdef WITH_DEBUG
-    cout << "In copy constructor: HeplString::HeplString(HeplString const& other)" << endl;
+    std::cout << "In copy constructor: HeplString::HeplString(HeplString const& other)" << std::endl;
 #endif
     m_size = other->m_size;
     m_stringArray = new char[m_size + 1];
@@ -83,7 +81,7 @@ bool HeplString::empty() const {
     
 HeplString::~HeplString() {
 #ifdef WITH_DEBUG
-    cout << "In destructor: HeplString::~HeplString()" << endl;
+    std::cout << "In destructor: HeplString::~HeplString()" << std::endl;
 #endif
     if (m_stringArray != nullptr) {
         delete[] m_stringArray;
@@ -222,14 +220,14 @@ HeplString& operator<<(const char *lhs, const HeplString& rhs) {
     return HeplString(lhs) += rhs;
 }
 
-ostream& operator<<(ostream& lhs, const HeplString& rhs) {
+std::ostream& operator<<(std::ostream& lhs, const HeplString& rhs) {
     for (size_t i = 0; i < rhs.m_size; i++) {
         lhs << rhs.m_stringArray[i];
     }
     return lhs;
 }
 
-istream& operator>>(istream& lhs, HeplString& rhs) {
+std::istream& operator>>(std::istream& lhs, HeplString& rhs) {
 
     // istream is not like fstream, we cannot read back in the stream, reading
     // is destructive, so using a linked list seems mandatory here (or smarter,
@@ -522,12 +520,12 @@ HeplList<HeplString> HeplString::explode(HeplString delimiter, int limit) {
     return toKeepList;
 }
 
-void HeplString::save(ofstream& out) const {
+void HeplString::save(std::ofstream& out) const {
     out.write((char*)&m_size, sizeof(m_size));
     out.write((char*)m_stringArray, m_size);
 }
 
-void HeplString::load(ifstream& in) {
+void HeplString::load(std::ifstream& in) {
     in.read((char*)&m_size, sizeof(m_size));
     m_stringArray = new char[m_size];
     in.read((char*)m_stringArray, m_size);
