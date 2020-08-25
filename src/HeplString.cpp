@@ -108,18 +108,20 @@ HeplString& HeplString::operator+=(const HeplString& rhs) {
 
     char *oldStringArray = m_stringArray;
     m_stringArray = new char[m_size + rhs.m_size + 1];
-    size_t i = 0;
+
     // Copy existing string to new memory space
-    while (i < m_size) {
+    for (size_t i = 0; i < m_size; i++) {
         m_stringArray[i] = oldStringArray[i];
-        i++;
     }
+
     delete[] oldStringArray;
 
     // Copy rhs rvalue string to same new memory space
     for (size_t j = 0; j < rhs.m_size; j++) {
-        m_stringArray[i + j] = rhs.m_stringArray[j];
+        m_stringArray[m_size + j] = rhs.m_stringArray[j];
     }
+
+    m_stringArray[m_size + rhs.m_size] = '\0';
 
     m_size += rhs.m_size;
 
