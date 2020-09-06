@@ -26,46 +26,46 @@ class HeplString {
         // Constructors/destructors
         HeplString();
         HeplString(const char *newString);
-        HeplString(int number);
+        HeplString(const int number);
         HeplString(const HeplString& other);
-        HeplString(HeplString* other);
+        HeplString(HeplString* const other);
         ~HeplString();
 
         // Other methods
         char *c_str() const;
         size_t size() const;
         bool empty() const;
-        HeplString itoa(int n);
+        HeplString itoa(const int n) const;
         int atoi() const;
-        HeplString ftoa(float f, int afterpoint = 4);
+        HeplString ftoa(const float f, const int afterpoint = 4);
         bool isNumber() const;
         HeplString& reverse();
         void clear();
-        HeplString substr(size_t pos = 0, size_t len = -1) const;
-        HeplList<HeplString> explode(HeplString delimiter, int limit = 0);
+        HeplString substr(const size_t pos = 0, const size_t len = -1) const;
+        HeplList<HeplString> explode(const HeplString& delimiter, const int limit = 0);
 
         // Operators
-        HeplString& operator=(const HeplString& rhs);
-        HeplString& operator+=(const HeplString& rhs);
-        HeplString& operator+=(const char *rhs);
+        const HeplString& operator=(const HeplString& rhs);
+        const HeplString& operator+=(const HeplString& rhs);
+        const HeplString& operator+=(const char *rhs);
         HeplString operator+(const HeplString& rhs);
         HeplString operator+(const char *rhs);
         HeplString operator+(int rhs);
-        char operator[](size_t i) const;
-        char& operator[](size_t i);
-        bool operator==(HeplString const& rhs) const;
-        bool operator!=(HeplString const& rhs) const;
-        bool operator<(HeplString const& rhs) const;
-        bool operator>(HeplString const& rhs) const;
-        bool operator<=(HeplString const& rhs) const;
-        bool operator>=(HeplString const& rhs) const;
+        char operator[](const size_t i) const;
+        char& operator[](const size_t i);
+        bool operator==(const HeplString& rhs) const;
+        bool operator!=(const HeplString& rhs) const;
+        bool operator<(const HeplString& rhs) const;
+        bool operator>(const HeplString& rhs) const;
+        bool operator<=(const HeplString& rhs) const;
+        bool operator>=(const HeplString& rhs) const;
 
         // Stream management
-        HeplString& operator<<(HeplString const& rhs);
+        const HeplString& operator<<(const HeplString& rhs);
         friend HeplString operator+(const char *lhs, const HeplString& rhs);
-        friend HeplString& operator<<(const char *lhs, const HeplString& rhs);
+        friend HeplString operator<<(const char *lhs, const HeplString& rhs);
         friend std::ostream& operator<<(std::ostream& lhs, const HeplString& rhs);
-        friend std::istream& operator>>(std::istream& lhs, HeplString& rhs);
+        friend const std::istream& operator>>(std::istream& lhs, HeplString& rhs);
         void save(std::ofstream& out) const;
         void load(std::ifstream& in);
 };

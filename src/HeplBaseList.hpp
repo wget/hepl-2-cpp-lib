@@ -9,6 +9,15 @@
 template<class T>
 class HeplBaseListIterator;
 
+// Forward declaration needed to make the operator considered as 'introvert'
+// https://stackoverflow.com/a/4661372/3514658
+
+template<class T>
+class HeplBaseList;
+
+template<class T>
+std::ostream& operator<<(std::ostream& lhs, const HeplBaseList<T>& rhs);
+
 template<class T>
 class HeplBaseList {
 
@@ -19,7 +28,7 @@ class HeplBaseList {
     public:
         // Constructors/destructors
         HeplBaseList();
-        HeplBaseList(HeplBaseList& baselist);
+        HeplBaseList(const HeplBaseList& baselist);
         virtual ~HeplBaseList();
 
         // Other methods
@@ -32,7 +41,9 @@ class HeplBaseList {
 
         // Operators
         HeplBaseList& operator=(HeplBaseList const& baseList);
+        friend std::ostream& operator<<<T>(std::ostream& lhs, const HeplBaseList<T>& rhs);
         T& operator[](size_t i);
+        const T& operator[](size_t i) const;
 
         // Attributes
         friend class HeplBaseListIterator<T>;
@@ -48,7 +59,7 @@ HeplBaseList<T>::HeplBaseList()
 }
 
 template<class T>
-HeplBaseList<T>::HeplBaseList(HeplBaseList& baseList)
+HeplBaseList<T>::HeplBaseList(const HeplBaseList& baseList)
     : m_pHead(nullptr) {
 
     if (baseList.m_pHead == nullptr) {
@@ -113,7 +124,7 @@ size_t HeplBaseList<T>::getNumberItems() const {
 template<class T>
 void HeplBaseList<T>::display() const {
     HeplCell<T> *baseListHeplCell = m_pHead;
-    for (size_t i = 0; baseListHeplCell != nullptr; i++) {
+    while (baseListHeplCell != nullptr) {
         baseListHeplCell->display();
         baseListHeplCell = baseListHeplCell->getNext();
     }
@@ -162,7 +173,40 @@ HeplBaseList<T>& HeplBaseList<T>::operator=(HeplBaseList const& baseList) {
 }
 
 template<class T>
+std::ostream& operator<<(std::ostream& lhs, const HeplBaseList<T>& rhs) {
+
+    lhs << "[ ";
+
+    HeplCell<T> *baseListHeplCell = rhs.m_pHead;
+    while (baseListHeplCell != nullptr) {
+        lhs << baseListHeplCell->getValue();
+        baseListHeplCell = baseListHeplCell->getNext();
+        if (baseListHeplCell != nullptr) {
+            lhs << ", ";
+        }
+    }
+
+    lhs << " ]";
+
+    return lhs;
+}
+
+
+template<class T>
 T& HeplBaseList<T>::operator[](size_t itemNumber) {
+    HeplCell<T> *baseListHeplCell = m_pHead;
+    for (size_t i = 0; baseListHeplCell != nullptr && i != itemNumber; i++) {
+        baseListHeplCell = baseListHeplCell->getNext();
+    }
+
+    if (baseListHeplCell == nullptr) {
+        throw HeplBaseListItemNotFoundException();
+    }
+    return *(baseListHeplCell->getValue());
+}
+
+template<class T>
+const T& HeplBaseList<T>::operator[](size_t itemNumber) const {
     HeplCell<T> *baseListHeplCell = m_pHead;
     for (size_t i = 0; baseListHeplCell != nullptr && i != itemNumber; i++) {
         baseListHeplCell = baseListHeplCell->getNext();

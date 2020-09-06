@@ -31,7 +31,7 @@ HeplString::HeplString(const char *newString) {
     m_stringArray[m_size] = '\0';
 }
 
-HeplString::HeplString(int number) {
+HeplString::HeplString(const int number) {
 #ifdef WITH_DEBUG
     std::cout << "In initialization constructor: HeplString::HeplString(int number)" << std::endl;
 #endif
@@ -53,7 +53,7 @@ HeplString::HeplString(const HeplString& other) {
     m_stringArray[m_size] = '\0';
 }
 
-HeplString::HeplString(HeplString* other) {
+HeplString::HeplString(HeplString* const other) {
 #ifdef WITH_DEBUG
     std::cout << "In copy constructor: HeplString::HeplString(HeplString const& other)" << std::endl;
 #endif
@@ -88,7 +88,7 @@ HeplString::~HeplString() {
     }
 }
 
-HeplString& HeplString::operator=(const HeplString& rhs) {
+const HeplString& HeplString::operator=(const HeplString& rhs) {
     // Avoid copy when assigned to same object.
     if (this == &rhs) {
         return *this;
@@ -104,7 +104,7 @@ HeplString& HeplString::operator=(const HeplString& rhs) {
     return *this;
 }
 
-HeplString& HeplString::operator+=(const HeplString& rhs) {
+const HeplString& HeplString::operator+=(const HeplString& rhs) {
 
     char *oldStringArray = m_stringArray;
     m_stringArray = new char[m_size + rhs.m_size + 1];
@@ -128,7 +128,7 @@ HeplString& HeplString::operator+=(const HeplString& rhs) {
     return *this;
 }
 
-HeplString& HeplString::operator+=(const char *rhs) {
+const HeplString& HeplString::operator+=(const char *rhs) {
     HeplString rhsString(rhs);
     *this += rhsString;
     return *this;
@@ -146,20 +146,20 @@ HeplString HeplString::operator+(const char *rhs) {
     return newString;
 }
 
-HeplString HeplString::operator+(int rhs) {
+HeplString HeplString::operator+(const int rhs) {
     HeplString newString(*this);
     newString += HeplString(rhs);
     return newString;
 }
 
-char HeplString::operator[](size_t i) const {
+char HeplString::operator[](const size_t i) const {
     if (i >= m_size) {
         throw 1;
     }
     return m_stringArray[i];
 }
 
-char& HeplString::operator[](size_t i) {
+char& HeplString::operator[](const size_t i) {
     if (i >= m_size) {
         throw 1;
     }
@@ -178,39 +178,39 @@ bool HeplString::operator==(HeplString const& rhs) const {
     return true;
 }
 
-bool HeplString::operator!=(HeplString const& rhs) const {
+bool HeplString::operator!=(const HeplString& rhs) const {
     return !(*this == rhs);
 }
 
-bool HeplString::operator>(HeplString const& rhs) const {
+bool HeplString::operator>(const HeplString& rhs) const {
     if (size() > rhs.size()) {
         return true;
     }
     return false;
 }
 
-bool HeplString::operator<(HeplString const& rhs) const {
+bool HeplString::operator<(const HeplString& rhs) const {
     if (size() < rhs.size()) {
         return true;
     }
     return false;
 }
 
-bool HeplString::operator>=(HeplString const& rhs) const {
+bool HeplString::operator>=(const HeplString& rhs) const {
     if (size() >= rhs.size()) {
         return true;
     }
     return false;
 }
 
-bool HeplString::operator<=(HeplString const& rhs) const {
+bool HeplString::operator<=(const HeplString& rhs) const {
     if (size() <= rhs.size()) {
         return true;
     }
     return false;
 }
 
-HeplString& HeplString::operator<<(const HeplString& rhs) {
+const HeplString& HeplString::operator<<(const HeplString& rhs) {
     return HeplString(*this) += rhs;
 }
 
@@ -218,7 +218,7 @@ HeplString operator+(const char *lhs, const HeplString& rhs) {
     return HeplString(lhs) += rhs;
 }
 
-HeplString& operator<<(const char *lhs, const HeplString& rhs) {
+HeplString operator<<(const char *lhs, const HeplString& rhs) {
     return HeplString(lhs) += rhs;
 }
 
@@ -229,7 +229,7 @@ std::ostream& operator<<(std::ostream& lhs, const HeplString& rhs) {
     return lhs;
 }
 
-std::istream& operator>>(std::istream& lhs, HeplString& rhs) {
+const std::istream& operator>>(std::istream& lhs, HeplString& rhs) {
 
     // istream is not like fstream, we cannot read back in the stream, reading
     // is destructive, so using a linked list seems mandatory here (or smarter,
@@ -307,7 +307,7 @@ void HeplString::itoaStringArray(int n) {
     }
 }
 
-HeplString HeplString::itoa(int n) {
+HeplString HeplString::itoa(const int n) const {
     HeplString newString;
     newString.itoaStringArray(n);
     newString.reverse();
@@ -442,7 +442,7 @@ void HeplString::kmpBuildFailureFunction(HeplString pattern, int f[]) {
     }
 }
 
-HeplList<HeplString> HeplString::explode(HeplString delimiter, int limit) {
+HeplList<HeplString> HeplString::explode(const HeplString& delimiter, int limit) {
 
     HeplList<HeplString> explodedList;
 

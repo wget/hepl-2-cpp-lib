@@ -14,7 +14,7 @@ class HeplCell {
         HeplCell<T>(T value, HeplCell<T> *pNext);
         T* getValue();
         HeplCell<T>* getNext() const;
-        void setValue(T newValue);
+        void setValue(const T& newValue);
         void setNext(HeplCell<T> *newNext);
         void display() const;
 };
@@ -41,7 +41,7 @@ HeplCell<T>* HeplCell<T>::getNext() const {
 }
 
 template<class T>
-void HeplCell<T>::setValue(T newValue) {
+void HeplCell<T>::setValue(const T& newValue) {
     m_value = newValue;
 }
 
