@@ -38,6 +38,7 @@ class HeplBaseList {
         bool find(T const& val) const;
         // Pure virtual method
         virtual T* add(T const& val) = 0;
+        void remove(const size_t at);
 
         // Operators
         HeplBaseList& operator=(HeplBaseList const& baseList);
@@ -143,6 +144,21 @@ bool HeplBaseList<T>::find(T const& val) const {
     }
 
     return false;
+}
+
+template<class T>
+void HeplBaseList<T>::remove(const size_t at) {
+    HeplCell<T> *baseListHeplCell = m_pHead;
+    HeplCell<T> *baseListHeplCellPrevious = baseListHeplCell;
+    for (size_t i = 0; baseListHeplCell != nullptr; i++) {
+        if (i == at) {
+            baseListHeplCellPrevious->setNext(baseListHeplCell->getNext());
+            delete baseListHeplCell;
+            return;
+        }
+        baseListHeplCellPrevious = baseListHeplCell;
+        baseListHeplCell = baseListHeplCell->getNext();
+    }
 }
 
 template<class T>
