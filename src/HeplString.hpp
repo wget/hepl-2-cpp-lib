@@ -54,6 +54,7 @@ class HeplString {
         char operator[](const size_t i) const;
         char& operator[](const size_t i);
         bool operator==(const HeplString& rhs) const;
+        bool operator==(const char& rhs) const;
         bool operator!=(const HeplString& rhs) const;
         bool operator<(const HeplString& rhs) const;
         bool operator>(const HeplString& rhs) const;

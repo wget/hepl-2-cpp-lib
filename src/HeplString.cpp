@@ -178,6 +178,17 @@ bool HeplString::operator==(HeplString const& rhs) const {
     return true;
 }
 
+bool HeplString::operator==(const char& rhs) const {
+    if (size() > 1) {
+        return false;
+    }
+
+    if (m_stringArray[0] == rhs) {
+        return true;
+    }
+    return false;
+}
+
 bool HeplString::operator!=(const HeplString& rhs) const {
     return !(*this == rhs);
 }
