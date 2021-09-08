@@ -45,6 +45,8 @@ class HeplBaseList {
         friend std::ostream& operator<<<T>(std::ostream& lhs, const HeplBaseList<T>& rhs);
         T& operator[](size_t i);
         const T& operator[](size_t i) const;
+        T& getElement(size_t i);
+        const T& getElement(size_t i) const;
 
         // Attributes
         friend class HeplBaseListIterator<T>;
@@ -207,7 +209,6 @@ std::ostream& operator<<(std::ostream& lhs, const HeplBaseList<T>& rhs) {
     return lhs;
 }
 
-
 template<class T>
 T& HeplBaseList<T>::operator[](size_t itemNumber) {
     HeplCell<T> *baseListHeplCell = m_pHead;
@@ -232,6 +233,16 @@ const T& HeplBaseList<T>::operator[](size_t itemNumber) const {
         throw HeplBaseListItemNotFoundException();
     }
     return *(baseListHeplCell->getValue());
+}
+
+template<class T>
+T& HeplBaseList<T>::getElement(size_t i) {
+    return this->operator[](i);
+}
+
+template<class T>
+const T& HeplBaseList<T>::getElement(size_t i) const {
+    return this->operator[](i);
 }
 
 #include "HeplBaseListIterator.hpp"
